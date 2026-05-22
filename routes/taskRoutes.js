@@ -26,4 +26,18 @@ router.post("/", (req, res) => {
     });
 });
 
+router.get("/", (req, res) => {
+    const query = `SELECT * FROM tasks`;
+
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                error: err.message,
+            });
+        }
+
+        res.status(200).json(rows);
+    });
+});
+
 export default router;

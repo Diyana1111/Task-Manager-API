@@ -40,4 +40,24 @@ router.get("/", (req, res) => {
     });
 });
 
+router.get("/:id", (req, res) => {
+    const query = `SELECT * FROM tasks WHERE id = ?`;
+
+    db.get(query, [req.params.id], (err, row) => {
+        if (err) {
+            return res.status(500).json({
+                error: err.message,
+            });
+        }
+
+        if (!row) {
+            return res.status(404).json({
+                message: "Task not found",
+            });
+        }
+
+        res.status(200).json(row);
+    });
+});
+
 export default router;

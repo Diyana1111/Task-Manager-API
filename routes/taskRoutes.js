@@ -92,4 +92,26 @@ router.put("/:id", (req, res) => {
     );
 });
 
+router.delete("/:id", (req, res) => {
+    const query = `DELETE FROM tasks WHERE id = ?`;
+
+    db.run(query, [req.params.id], function (err) {
+        if (err) {
+            return res.status(500).json({
+                error: err.message,
+            });
+        }
+
+        if (this.changes === 0) {
+            return res.status(404).json({
+                message: "Task not found",
+            });
+        }
+
+        res.status(200).json({
+            message: "Task deleted successfully",
+        });
+    });
+});
+
 export default router;

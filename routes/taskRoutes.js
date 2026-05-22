@@ -60,4 +60,36 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.put("/:id", (req, res) => {
+    const { title, description, completed } = req.body;
+
+    const query = `
+        UPDATE tasks
+        SET title = ?, description = ?, completed = ?
+        WHERE id = ?
+    `;
+
+    db.run(
+        query,
+        [title, description, completed, req.params.id],
+        function (err) {
+            if (err) {
+                return res.status(500).json({
+                    error: err.message,
+                });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({
+                    message: "Task not found",
+                });
+            }
+
+            res.status(200).json({
+                message: "Task updated successfully",
+            });
+        }
+    );
+});
+
 export default router;
